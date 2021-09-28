@@ -24,7 +24,7 @@ class DataSetLoader(data.Dataset):
         label = self.labels[index]
         
         image = image_preprocessor(image_path)
-        label = torch.as_tensor(label, dtype=torch.int64)
+        label = torch.as_tensor(label, dtype = torch.int64)
         return image, label
 
     def __len__(self):
@@ -36,5 +36,5 @@ class DataSetLoader(data.Dataset):
         for index in range(self.__len__()):
             data_sets.append(self.__getitem__(index))
 
-        dataset = TensorDataset(data_sets)
-        return data.DataLoader(dataset, batch_size=64) 
+        torch_dataset = dataset.TensorDataset(data_sets)
+        return data.DataLoader(torch_dataset, batch_size = 64) 
