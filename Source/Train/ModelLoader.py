@@ -7,11 +7,7 @@ class ModelLoader():
     neural_network_model = None
     def __init__(self, model_url, model_folder, model_file_name):
         state_dict = hub.load_state_dict_from_url(model_url)
-        device_name = "cpu"
-        if cuda.is_available():
-            device_name = "cuda"
-
-        target_device = torch_device(device_name)
+        target_device = self.load_device()
         neural_network_model = models.resnet50(pretrained = True, model_dir = model_folder, file_name = model_file_name, progress = False)
         neural_network_model.load_state_dict(state_dict)
         for param in neural_network_model.parameters():
@@ -24,6 +20,14 @@ class ModelLoader():
                                  nn.LogSoftmax(dim=1))
         neural_network_model.to(target_device)
 
-    # Load model    
+    # Load device type.
+    def load_device():
+        device_name = "cpu"
+        if cuda.is_available():
+            device_name = "cuda"
+
+        return torch_device(device_name)
+
+    # Load model.
     def load(self):
         return self.neural_network_model
