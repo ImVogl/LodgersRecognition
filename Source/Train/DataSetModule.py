@@ -2,7 +2,7 @@ import os
 import torch
 from torch.utils import data
 from PIL import Image
-from torchvision import transforms, dataset
+from torchvision import transforms, datasets
 
 # This function prepares images to train neural network model.
 # - It sclales an image to 256x256 points;
@@ -36,5 +36,5 @@ class DataSetLoader(data.Dataset):
         for index in range(self.__len__()):
             data_sets.append(self.__getitem__(index))
 
-        torch_dataset = dataset.TensorDataset(data_sets)
+        torch_dataset = datasets.TensorDataset(data_sets)
         return data.DataLoader(torch_dataset, batch_size = 64) 

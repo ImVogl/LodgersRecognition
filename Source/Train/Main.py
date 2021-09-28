@@ -1,9 +1,9 @@
-from .DataSet import DataSetLoader
-from .ModelLoader import ModelLoader
+import DataSetModule
+import ModelLoaderModule
 import os
-import sys
 from torch import nn, optim
 import torch
+import numpy as np
 
 # The pretrained network was got from
 # https://github.com/Cadene/pretrained-models.pytorch/blob/master/pretrainedmodels/models/torchvision_models.py
@@ -11,20 +11,28 @@ import torch
 
 # Setting up
 model_file_name = 'roman_resnet50.pth'
-model_folder = os.path.append(sys.getcwd(), 'pretrained_model')
-test_image_names = ['12M Too Close.jpg', 'Full HD (2M) Too Close.jpg', 'HD (092M) Too Close.jpg', 'SVGA (048M) Too Close.jpg']
-test_root_folder = os.path.join(sys.getcwd(), '..\\..\\DataSet\\Single face - different range and quality\\Too Close')
-labels = ['Really big file', 'Big file', 'Small file', 'Realy small file']
+script_folder = os.path.dirname(os.path.realpath(__file__))
+model_folder = os.path.join(script_folder, 'pretrained_model')
+if not os.path.isdir(model_folder):
+    os.mkdir(model_folder)
 
-test_dataset_loader = DataSetLoader(test_root_folder, test_image_names, labels) # Поправить пути
-train_dataset_loader = DataSetLoader(root_folder, image_names, labels) # Поправить пути
-model_loader = ModelLoader('https://download.pytorch.org/models/resnet50-19c8e357.pth', model_folder, model_file_name)
+root_folder = os.path.join(script_folder, '..\\..\\DataSet\\RomanAllImages')
+all_images = os.listdir(root_folder)
+num_train = len(all_images)
+split = int(np.floor(0.2 * num_train))
+np.random.shuffle(all_images)
+train_image_names, test_image_names = all_images[split:], all_images[:split]
+
+test_dataset_loader = DataSetModule.DataSetLoader(root_folder, test_image_names, range(len(test_image_names)))
+train_dataset_loader = DataSetModule.DataSetLoader(root_folder, train_image_names, range(len(train_image_names)))
+model_loader = ModelLoaderModule.ModelLoader('https://download.pytorch.org/models/resnet50-19c8e357.pth')
 neural_network_model = model_loader.load()
 device = model_loader.load_device()
 
 criterion = nn.NLLLoss()
 optimizer = optim.Adam(neural_network_model.fc.parameters(), lr = 0.003)
 
+# Start train
 epochs = 10
 steps = 0
 running_loss = 0
