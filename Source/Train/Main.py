@@ -10,7 +10,7 @@ import Utils
 # https://download.pytorch.org/models/resnet50-19c8e357.pth
 
 # Setting up
-train_image_names, test_image_names = Utils.split_dataset(list(Utils.get_dataset()))
+train_image_names, test_image_names = Utils.split_dataset(Utils.get_dataset())
 train_dataset_loader = DataSetModule.DataSetLoader(train_image_names)
 test_dataset_loader = DataSetModule.DataSetLoader(test_image_names)
 model_loader = ModelLoaderModule.ModelLoader()

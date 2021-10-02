@@ -3,3 +3,6 @@
 PretrainedModels/resnet50_ft_dag.pth
 PretrainedModels/resnet50_scratch_dag.pth
 Source/Train/Model/__pycache__/Image.cpython-38.pyc
+PretrainedModels/20180402-114759-vggface2.pt
+PretrainedModels/20180408-102900-casia-webface.pt
+PretrainedModels/Result/ResNet50_LodgersRecognition.pth

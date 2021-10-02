@@ -24,7 +24,7 @@ class DataSetLoader(data.Dataset):
         return preprocessed_image, label
 
     def __len__(self):
-        return len(self.filenames)
+        return len(self.loaded_dataset)
 
     # Loading images train data.
     def load(self):
