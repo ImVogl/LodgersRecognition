@@ -1,2 +1,5 @@
 /DataSet/*
 /Source/Train/__pycache__/*
+PretrainedModels/resnet50_ft_dag.pth
+PretrainedModels/resnet50_scratch_dag.pth
+Source/Train/Model/__pycache__/Image.cpython-38.pyc
