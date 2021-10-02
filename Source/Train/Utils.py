@@ -11,11 +11,12 @@ def get_working_dir():
 
 # Getting full path to pretrained neural network file.
 def get_resnet50_full_path():
-    resnet50_network_file_name = 'resnet50_ft_dag.pth'
+    resnet50_network_file_name = '20180408-102900-casia-webface.pt'
     return os.path.join(get_working_dir(), '..\\..\\PretrainedModels', resnet50_network_file_name)
 
 # Getting preparated dataset.
 def get_dataset():
+    result = []
     root_folder = os.path.join(get_working_dir(), '..\\..\\DataSet\\Current')
     all_dir_items = os.listdir(root_folder)
     for item in all_dir_items:
@@ -23,7 +24,8 @@ def get_dataset():
         if not os.path.isdir(full_path):
             continue
 
-        yield get_all_images(root_folder, item)
+        result += list(get_all_images(root_folder, item))
+    return result
 
 # Getting all images for target label.
 def get_all_images(root: str, subfolder: str):
@@ -50,7 +52,7 @@ def split_dataset(data_set: List[img_file.TrainImage], test_proportion: float = 
 def path_to_output_nn():
     model_file_name = 'ResNet50_LodgersRecognition.pth'
     result_dir = os.path.join(get_working_dir(), '..\\..\\PretrainedModels\\Result')
-    if os.path.isdir():
+    if not os.path.isdir(result_dir):
         os.mkdir(result_dir)
 
     return os.path.join(result_dir, model_file_name)
@@ -62,8 +64,9 @@ def get_last_label():
     all_dir_items = os.listdir(root_folder)
     for item in all_dir_items:
         full_path = os.path.join(root_folder, item)
-        if os.path.isdir(full_path) and item.isdigit() and max_label < item:
-            max_label = item
+        int_item = int(item)
+        if os.path.isdir(full_path) and item.isdigit() and max_label < int_item:
+            max_label = int_item
         
     return max_label
 
