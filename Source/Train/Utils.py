@@ -64,8 +64,11 @@ def get_last_label():
     all_dir_items = os.listdir(root_folder)
     for item in all_dir_items:
         full_path = os.path.join(root_folder, item)
+        if not (os.path.isdir(full_path) and item.isdigit()):
+            continue
+        
         int_item = int(item)
-        if os.path.isdir(full_path) and item.isdigit() and max_label < int_item:
+        if max_label < int_item:
             max_label = int_item
         
     return max_label

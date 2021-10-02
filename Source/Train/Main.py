@@ -21,10 +21,10 @@ criterion = nn.NLLLoss()
 optimizer = optim.Adam(neural_network_model.fc.parameters(), lr = 0.003)
 
 # Start train
-epochs = 10
+epochs = 20
 steps = 0
 running_loss = 0
-print_every = 10
+print_every = 2
 train_losses, test_losses = [], []
 for epoch in range(epochs):
     for trdl_inputs, trdl_labels in train_dataset_loader.load():
@@ -49,12 +49,12 @@ for epoch in range(epochs):
                     test_loss += batch_loss.item()
                     
                     ps = torch.exp(logps)
-                    top_p, top_class = ps.topk(1, dim=1)
+                    top_p, top_class = ps.topk(1, dim = 1)
                     equals = top_class == labels.view(*top_class.shape)
                     accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
             train_losses.append(running_loss/len(test_dataset_loader))
             test_losses.append(test_loss/len(test_dataset_loader))                    
-            print(f"Epoch {epoch+1}/{epochs}.. "
+            print(f"Epoch {epoch + 1}/{epochs}.. "
                   f"Train loss: {running_loss/print_every:.3f}.. "
                   f"Test loss: {test_loss/len(test_dataset_loader):.3f}.. "
                   f"Test accuracy: {accuracy/len(test_dataset_loader):.3f}")
