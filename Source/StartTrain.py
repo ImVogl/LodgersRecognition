@@ -1,8 +1,8 @@
-import DataSetModule
-import ModelLoaderModule
+import Train.DataSetModule as dsm
+import Common.ModelLoaderModule as mlm
 import torch
-import Utils
-import TrainService
+import Common.Utils as utils
+import Train.TrainService as ts
 
 # The pretrained network was got from
 # https://github.com/Cadene/pretrained-models.pytorch/blob/master/pretrainedmodels/models/torchvision_models.py
@@ -10,12 +10,12 @@ import TrainService
 # https://download.pytorch.org/models/resnet50-19c8e357.pth
 
 # Setting up
-train_image_names, test_image_names = Utils.split_dataset(Utils.get_dataset(), 0.35)
-train_dataset_loader = DataSetModule.DataSetLoader(train_image_names)
-test_dataset_loader = DataSetModule.DataSetLoader(test_image_names)
-model_loader = ModelLoaderModule.ModelLoader()
+train_image_names, test_image_names = utils.split_dataset(utils.get_dataset(), 0.35)
+train_dataset_loader = dsm.DataSetLoader(train_image_names)
+test_dataset_loader = dsm.DataSetLoader(test_image_names)
+model_loader = mlm.ModelLoader()
 neural_network_model = model_loader.load()
-training_service = TrainService.TrainService(neural_network_model)
+training_service = ts.TrainService(neural_network_model)
 
 # Start train
 epochs = 6
@@ -35,4 +35,4 @@ for epoch in range(epochs):
     train_losses.append(train_loss/len(test_dataset_loader))
     test_losses.append(test_loss/len(test_dataset_loader))
 
-torch.save(neural_network_model, Utils.path_to_output_nn())
+torch.save(neural_network_model.state_dict(), utils.path_to_output_nn())

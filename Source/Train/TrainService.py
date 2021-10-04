@@ -1,6 +1,6 @@
 import torch
 from torch import optim, nn
-import Utils
+import Common.Utils as utils
 
 # Service of model training.
 class TrainService():
@@ -8,7 +8,7 @@ class TrainService():
         self.model = model
         self.optimizer = optim.Adam(model.fc.parameters(), lr = 0.003)
         self.criterion = nn.NLLLoss()
-        self.device = Utils.load_device()
+        self.device = utils.load_device()
 
     # Call model forward for test dataset.
     def eval(self, dataset_loader):

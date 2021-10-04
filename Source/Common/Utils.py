@@ -1,5 +1,5 @@
 import os
-import Model.Image as img_file
+import Train.Model.Image as img_file
 import imghdr
 from typing import List
 import numpy as np
@@ -50,7 +50,7 @@ def split_dataset(data_set: List[img_file.TrainImage], test_proportion: float = 
 
 # Getting file with trained neural network. 
 def path_to_output_nn():
-    model_file_name = 'ResNet50_LodgersRecognition.pth'
+    model_file_name = 'ResNet50_LodgersRecognition.pt'
     result_dir = os.path.join(get_working_dir(), '..\\..\\PretrainedModels\\Result')
     if not os.path.isdir(result_dir):
         os.mkdir(result_dir)
