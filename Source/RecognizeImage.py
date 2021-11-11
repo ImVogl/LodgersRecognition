@@ -3,9 +3,11 @@ from facenet_pytorch import InceptionResnetV1
 from Train.DataSetModule import DataSetLoader
 import torch
 
-model = InceptionResnetV1(pretrained='vggface2')
-model.fc = torch.nn.Sequential(torch.nn.Linear(2048, 512), torch.nn.ReLU(), torch.nn.Dropout(0.2), torch.nn.Linear(512, utils.get_last_label()), torch.nn.LogSoftmax(dim = 1))
+from torchsummary import summary
+
+model = torch.nn.Sequential(InceptionResnetV1(pretrained='vggface2'), torch.nn.Linear(512, utils.get_last_label() + 1))
 model.to(utils.load_device())
+print(summary(model, (3, 224, 224), batch_size = 1, device = "cpu"))
 model.load_state_dict(torch.load(utils.path_to_output_nn()))
 model.eval()
 

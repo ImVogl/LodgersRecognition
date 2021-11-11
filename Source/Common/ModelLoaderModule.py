@@ -1,41 +1,41 @@
-from torch import nn, hub
-from torch import load as torch_load
+from torch import nn, optim
 from torchvision import models
 import Common.Utils as utils
-from facenet_pytorch import InceptionResnetV1
 
 # Loader of model.
-class ModelLoader():    
-    def __init__(self, model_url):
-        state_dict = hub.load_state_dict_from_url(model_url)
-        self.internal_init(state_dict)
-
-    def __init__(self, path_to_file: str = None):
-        if path_to_file != None:
-            self.internal_init(path_to_file)
-        else:
-            self.init_with_module()
-
-    # Internal initialization of model loader.
-    def internal_init(self, path):
-        target_device = utils.load_device()
-        self.neural_network_model = models.resnet50(pretrained = True, progress = False)
-        self.neural_network_model.load_state_dict(torch_load(path, map_location = target_device))
+class PretrainedModelLoader():
+    def __init__(self):
+        utilites = utils.Utils()
+        target_device = utilites.load_device()
+        model = models.resnet50(pretrained = True, progress = False)
+        self.neural_network_model = nn.Sequential(*(list(model.children())[:-1]))
         for param in self.neural_network_model.parameters():
             param.requires_grad = False
 
-        self.neural_network_model.fc = nn.Sequential(nn.Linear(2048, 512), nn.ReLU(), nn.Dropout(0.2), nn.Linear(512, utils.get_last_label()), nn.LogSoftmax(dim = 1))
+        for group in optim.param_groups:
+            group['lr'] = 0.0005
+
         self.neural_network_model.to(target_device)
 
-    # Initializing neural network with module from https://modelzoo.co/model/facenet-pytorch
-    def init_with_module(self):
-        self.neural_network_model = InceptionResnetV1(pretrained='vggface2')
-        for param in self.neural_network_model.parameters():
-            param.requires_grad = True
-
-        self.neural_network_model.fc = nn.Sequential(nn.Linear(2048, 512), nn.ReLU(), nn.Dropout(0.2), nn.Linear(512, utils.get_last_label()), nn.LogSoftmax(dim = 1))
-        self.neural_network_model.to(utils.load_device())
+    # Save model
+    def save(self, model):
+        self.neural_network_model = model
 
     # Load model.
     def load(self):
         return self.neural_network_model
+
+    # Load model for classification.
+    def load_classify_model(self):
+        utilites = utils.Utils('..\\..\\DataSet\\VGGDataSet\\FirstEpoche')
+        model = self.neural_network_model
+        last_layer = list(model.children())[-1]
+        in_features_prelast_layer = last_layer.in_features
+        out_features_prelast_layer = utilites.get_last_label()
+        in_features_function = nn.Linear(in_features_prelast_layer, out_features_prelast_layer)
+        utilites = utils.Utils('..\\..\\DataSet\\VGGDataSet\\SecondEpoche')
+        out_features_function = nn.Linear(out_features_prelast_layer, utilites.get_last_label())
+        model.fc = nn.Sequential(in_features_function, nn.ReLU(), nn.Dropout(0.2), out_features_function, nn.LogSoftmax(dim = 1))
+        optim.param_groups[-1]['lr'] = 0.005
+            
+        return model
