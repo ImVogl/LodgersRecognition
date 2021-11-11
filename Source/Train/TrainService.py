@@ -4,10 +4,14 @@ import Common.Utils as utilites
 
 # Service of model training.
 class TrainService():
-    def __init__(self, model):
+    def __init__(self, model, learning_rate, only_last_layer: bool = False):
         self.utils = utilites.Utils()
         self.model = model
-        self.optimizer = optim.Adam(model.parameters(), lr = 0.003)
+        if only_last_layer:
+            self.optimizer = optim.Adam(model.classifier.parameters(), lr = learning_rate)
+        else:
+            self.optimizer = optim.Adam(model.parameters(), lr = learning_rate)
+
         self.criterion = nn.NLLLoss()
         self.device = self.utils.load_device()
 

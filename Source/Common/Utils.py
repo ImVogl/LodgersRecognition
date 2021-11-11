@@ -7,7 +7,7 @@ from torch import device as torch_device, cuda
 
 # Support utils for recognition and training
 class Utils():
-    def __init__(self, dataset : str):
+    def __init__(self, dataset : str = None):
         # Path to folder with data set
         if dataset == None:
             self.data_set_base_path = '..\\..\\DataSet\\Current'

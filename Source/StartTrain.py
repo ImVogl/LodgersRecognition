@@ -23,7 +23,7 @@ def Pretrain():
     test_dataset_loader = dsm.DataSetLoader(test_image_names)
     train_losses, test_losses = [], []
     neural_network_model = model_loader.load()
-    training_service = ts.TrainService(neural_network_model)
+    training_service = ts.TrainService(neural_network_model, 0.0005)
     for epoch in range(epochs):
         train_loss, steps = training_service.train(train_dataset_loader, steps)
         test_loss, accuracy = training_service.eval(test_dataset_loader)
@@ -47,7 +47,7 @@ def Train():
     utils = utilites.Utils('..\\..\\DataSet\\VGGDataSet\\SecondEpoche')
     train_losses, test_losses = [], []
     neural_network_model = model_loader.load_classify_model()
-    training_service = ts.TrainService(neural_network_model)
+    training_service = ts.TrainService(neural_network_model, 0.005, True)
     for epoch in range(epochs):
         train_image_names, test_image_names = utils.split_classify_dataset(utils.get_dataset())
         train_dataset_loader = dsm.DataSetLoader(train_image_names)
@@ -65,3 +65,6 @@ def Train():
         test_losses.append(test_loss/len(test_dataset_loader))
     
     torch.save(neural_network_model.state_dict(), utils.path_to_output_nn())
+
+Pretrain()
+Train()
