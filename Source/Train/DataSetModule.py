@@ -20,7 +20,7 @@ class DataSetLoader(data.Dataset):
     def __getitem__(self, index):
         image = Image.open(self.loaded_dataset[index].image_full_path)
         preprocessed_image = self.image_preprocessor(image)
-        label = torch.as_tensor(self.loaded_dataset[index].label, dtype = torch.int64)
+        label = torch.as_tensor(self.loaded_dataset[index].label, dtype = torch.int64) # preprocessed_image.dtype
         return preprocessed_image, label
 
     def __len__(self):
@@ -28,4 +28,4 @@ class DataSetLoader(data.Dataset):
 
     # Loading images train data.
     def load(self):
-        return data.DataLoader(self, batch_size = 64)
+        return data.DataLoader(self, batch_size = 16)
