@@ -2,12 +2,14 @@ import torch
 from torch import optim, nn
 import Common.Utils as utilites
 import time
+from  Common.DiagnisticUtils import Diagnistic
 
 # Service of model training.
 class TrainService():
     # Initialization of train service.
     def __init__(self, model, learning_rate, only_last_layer: bool = False):
         self.imager_per_iteration = 16
+        self.diagnostic = Diagnistic()
         self.utils = utilites.Utils()
         self.model = model
         self.only_last_layer = only_last_layer
@@ -60,7 +62,7 @@ class TrainService():
             loss += loss.item()
             print(f"Setep: {steps};\tloss: {loss:.4f};\telapsed time: {time.time() - start:.2f} seconds.")
             if (steps - 1) % 20 == 0:
-                self.utils.summary(self.model)
+                self.diagnostic.save_average_weights(self.model, steps - 1)
         
         return loss, steps
     

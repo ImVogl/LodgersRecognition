@@ -3,6 +3,7 @@ import Common.ModelLoaderModule as mlm
 import torch
 import Common.Utils as utilites
 import Train.TrainService as ts
+from  Common.DiagnisticUtils import Diagnistic
 
 # The pretrained network was got from
 # https://github.com/Cadene/pretrained-models.pytorch/blob/master/pretrainedmodels/models/torchvision_models.py
@@ -18,7 +19,8 @@ def Pretrain():
     steps = 0
     print_every = 1
     utils = utilites.Utils('..\\..\\DataSet\\VGGDataSet\\FirstEpoche')
-    utils.clean_debug_folder()
+    diagnostic = Diagnistic()
+    diagnostic.clean_debug_folder()
     train_image_names, test_image_names = utils.split_dataset(utils.get_dataset(), 0.35)
     train_dataset_loader = dsm.DataSetLoader(train_image_names)
     test_dataset_loader = dsm.DataSetLoader(test_image_names)
