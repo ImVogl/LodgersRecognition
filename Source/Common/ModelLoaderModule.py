@@ -1,7 +1,6 @@
 from torch import nn
 from torchvision import models
 import Common.Utils as utils
-from torchsummary import summary
 
 # Loader of model.
 class PretrainedModelLoader():
@@ -39,6 +38,3 @@ class PretrainedModelLoader():
             
         return model
 
-    # Load nn info.
-    def summary(self):
-        print(summary(self.neural_network_model, (3, 256, 256)))

@@ -1,9 +1,11 @@
-import os
+import os, shutil
 import Train.Model.Image as img_file
 import imghdr
 from typing import List
 import numpy as np
-from torch import device as torch_device, cuda
+from torch import device as torch_device, cuda, layer_norm, nn
+from torchsummary import summary
+import json
 
 # Support utils for recognition and training
 class Utils():
@@ -13,6 +15,8 @@ class Utils():
             self.data_set_base_path = '..\\..\\DataSet\\Current'
         else:
             self.data_set_base_path = dataset
+
+        self.path_to_otput = os.path.join(self.get_working_dir(), '..\\..\\DebugOutput')
 
     # Get path to script working folder.
     def get_working_dir(self):
@@ -116,3 +120,47 @@ class Utils():
             device_name = "cuda"
 
         return torch_device(device_name)
+    
+    # Cleaning folder with debug info.
+    def clean_debug_folder(self):
+        for filename in os.listdir(self.path_to_otput):
+            file_path = os.path.join(self.path_to_otput, filename)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print('Failed to delete %s. Reason: %s' % (file_path, e))
+            
+
+    # Save info about nn model
+    def summary(self, model):
+        model_info_path = os.path.join(self.path_to_otput, 'model.json')
+        if os.path.exists(model_info_path):
+            with open(model_info_path, 'r') as model_info_file:
+                result = json.load(model_info_file)
+        else:
+            result = {}
+
+        modules = list(model.children())
+        for layer in nn.Sequential(*modules):
+            if not hasattr(layer, 'weight'):
+                continue
+            
+            layer_name = str(layer).split('(', 1)[0]
+            if not (layer_name in result.keys()):
+                result[layer_name] = []
+            
+            result[layer_name].append(str(np.average(layer.weight.detach().numpy())))
+
+        layer_name = "Fully connection layer"
+        if not (layer_name in result.keys()):
+            result[layer_name] = []
+
+        result[layer_name].append(str(np.average(model.fc.weight.detach().numpy())))
+        with open(model_info_path, 'w') as model_info_file:
+            json.dump(result, model_info_file)
+        
+        # info_writer.writerow(["Summary info"])
+        # info_writer.writerows(summary(model, (3, 256, 256), 16, "cuda" if cuda.is_available() else "cpu"))

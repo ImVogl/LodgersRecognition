@@ -18,6 +18,7 @@ def Pretrain():
     steps = 0
     print_every = 1
     utils = utilites.Utils('..\\..\\DataSet\\VGGDataSet\\FirstEpoche')
+    utils.clean_debug_folder()
     train_image_names, test_image_names = utils.split_dataset(utils.get_dataset(), 0.35)
     train_dataset_loader = dsm.DataSetLoader(train_image_names)
     test_dataset_loader = dsm.DataSetLoader(test_image_names)
@@ -45,6 +46,7 @@ def Train():
     steps = 0
     print_every = 1
     utils = utilites.Utils('..\\..\\DataSet\\VGGDataSet\\SecondEpoche')
+    utils.clean_debug_folder()
     train_losses, test_losses = [], []
     neural_network_model = model_loader.load_classify_model()
     training_service = ts.TrainService(neural_network_model, 0.0005, True)
