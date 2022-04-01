@@ -1,4 +1,4 @@
-# This script file load dataset and show image pairs before and after normalization
+# This script file shows image pairs before and after normalization
 import sys
 import os
 
