@@ -1,1 +1,8 @@
 /DataSet/*
+/**/__pycache__/*
+PretrainedModels/**/*
+Source/.vs/Source/v15/.suo
+Source/.vs/slnx.sqlite
+Source/.vs/VSWorkspaceState.json
+Source/Tests/CheckResult/*
+DebugOutput/**/*
