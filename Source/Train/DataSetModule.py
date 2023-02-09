@@ -15,7 +15,7 @@ import Train.Model.Image as img_file
 class DataSetLoader(data.Dataset):
     def __init__(self, loaded_dataset : List[img_file.TrainImage]):
         self.loaded_dataset = loaded_dataset
-        self.image_preprocessor = transforms.Compose([transforms.Resize(256), transforms.CenterCrop(224), transforms.ToTensor(), transforms.Normalize(mean = [0.485, 0.456, 0.406], std = [0.229, 0.224, 0.255])])
+        self.image_preprocessor = transforms.Compose([transforms.Resize(256), transforms.CenterCrop(224), transforms.ToTensor(), transforms.Normalize(mean = [0.485, 0.456, 0.406], std = [0.229, 0.224, 0.255])]) # , transforms.Grayscale(num_output_channels=1)
 
     def __getitem__(self, index):
         image = Image.open(self.loaded_dataset[index].image_full_path)

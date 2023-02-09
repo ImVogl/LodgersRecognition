@@ -60,7 +60,7 @@ class TrainService():
 
             self.optimizer.step()
             loss += loss.item()
-            print(f"Setep: {steps};\tloss: {loss:.4f};\telapsed time: {time.time() - start:.2f} seconds.")
+            print(f"Step: {steps};\tloss: {loss:.4f};\telapsed time: {time.time() - start:.2f} seconds.")
             if (steps - 1) % 20 == 0:
                 self.diagnostic.save_average_weights(self.model, steps - 1)
         

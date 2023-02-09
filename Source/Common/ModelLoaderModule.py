@@ -7,7 +7,7 @@ class PretrainedModelLoader():
     def __init__(self):
         utilites = utils.Utils('..\\..\\DataSet\\VGGDataSet\\FirstEpoche')
         target_device = utilites.load_device()
-        self.neural_network_model = models.resnet50(pretrained = False, progress = False)
+        self.neural_network_model = models.resnet50(pretrained = True, progress = False)
         last_layer = list(self.neural_network_model.children())[-1]
         in_features_prelast_layer = last_layer.in_features
         self.neural_network_model.fc = nn.Linear(in_features_prelast_layer, utilites.get_last_label() + 1)
