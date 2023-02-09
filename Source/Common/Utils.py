@@ -88,8 +88,8 @@ class Utils():
 
     # Getting file with trained neural network. 
     def path_to_output_nn(self):
-        model_file_name = 'ResNet50_LodgersRecognition.pt'
-        result_dir = os.path.join(self.get_working_dir(), '..\\..\\PretrainedModels\\Result')
+        model_file_name = 'ResNet18_LodgersRecognition.pt'
+        result_dir = os.path.join(self.get_working_dir(), f'..\..\PretrainedModels\Result')
         if not os.path.isdir(result_dir):
             os.mkdir(result_dir)
 
