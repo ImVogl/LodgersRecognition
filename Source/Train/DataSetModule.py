@@ -1,5 +1,5 @@
 import torch
-from torch.utils import data
+from torch.utils.data import Dataset, DataLoader
 from PIL import Image
 from torchvision import transforms
 from typing import List
@@ -12,10 +12,10 @@ import Train.Model.Image as img_file
 # - It normalizes an image, where 'mean' is average values for each channel, 'std' is standard deviations for each channel.
 
 # Loader of images data.
-class DataSetLoader(data.Dataset):
+class DataSetLoader(Dataset):
     def __init__(self, loaded_dataset : List[img_file.TrainImage]):
         self.loaded_dataset = loaded_dataset
-        self.image_preprocessor = transforms.Compose([transforms.Resize(256), transforms.CenterCrop(224), transforms.ToTensor(), transforms.Normalize(mean = [0.485, 0.456, 0.406], std = [0.229, 0.224, 0.255])]) # , transforms.Grayscale(num_output_channels=1)
+        self.image_preprocessor = transforms.Compose([transforms.Resize((64, 128)), transforms.ToTensor(), transforms.Normalize(mean = [0.485, 0.456, 0.406], std = [0.229, 0.224, 0.255])]) # , transforms.Grayscale(num_output_channels=1)
 
     def __getitem__(self, index):
         image = Image.open(self.loaded_dataset[index].image_full_path)
@@ -28,4 +28,4 @@ class DataSetLoader(data.Dataset):
 
     # Loading images train data.
     def load(self):
-        return data.DataLoader(self, batch_size = 16)
+        return DataLoader(self, batch_size = 4, shuffle = True)

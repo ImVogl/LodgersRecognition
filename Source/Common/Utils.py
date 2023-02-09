@@ -64,23 +64,23 @@ class Utils():
         test_proportion = 1/self.get_last_label()
         data_set_by_labels = {}
         for item in data_set:
-            if item.label in data_set_by_labels.keys:
+            if item.label in list(data_set_by_labels.keys()):
                 data_set_by_labels[item.label].append(item)
             else:
                 data_set_by_labels[item.label] = [item]
 
-        minimum_images_count = len(data_set_by_labels.values[0])
-        for key in data_set_by_labels.keys:
+        minimum_images_count = len(list(data_set_by_labels.values())[0])
+        for key in list(data_set_by_labels.keys()):
             if minimum_images_count < len(data_set_by_labels[key]):
                 minimum_images_count = len(data_set_by_labels[key])
 
-        for key in data_set_by_labels.keys:
+        for key in list(data_set_by_labels.keys()):
             np.random.shuffle(data_set_by_labels[key])
 
         images_per_label_count = int(np.floor(test_proportion * minimum_images_count))
         result_test_dataset = []
         result_train_data_set = []
-        for value in data_set_by_labels.values:
+        for value in list(data_set_by_labels.values()):
             result_test_dataset.append(value[:images_per_label_count])
             result_train_data_set.append(value[images_per_label_count:])
 
